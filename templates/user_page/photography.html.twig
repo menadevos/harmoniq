@@ -1,0 +1,10 @@
+<h3>Choisissez votre service de photographie :</h3>
+
+<form method="post" action="{{ path('user_confirm_photography') }}">
+    <select name="photographyType">
+        {% for photography in photographyOptions %}
+            <option value="{{ photography }}">{{ photography }}</option>
+        {% endfor %}
+    </select>
+    <button type="submit">Confirmer</button>
+</form>

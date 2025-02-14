@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Welcome to Event Planner</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #A56684;
+            --secondary-color: #8C4F6B;
+            --background-color: #F7F3F5;
+            --text-color: #333;
+            --accent-color: #D4AF37;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #A56684, #8C4F6B);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1000px;
+            width: 90%;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .welcome-container {
+            text-align: center;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            margin-bottom: 30px;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .welcome-container h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            color: #8C4F6B;
+        }
+
+        .welcome-container p {
+            font-size: 1.1em;
+            color: #555;
+            margin-bottom: 30px;
+        }
+
+        .event-selection {
+            margin-top: 30px;
+        }
+
+        .event-selection h2 {
+            font-family: 'Cormorant Garamond', serif;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        select {
+            width: 100%;
+            max-width: 400px;
+            padding: 12px;
+            border: 2px solid #e1e1e1;
+            border-radius: 8px;
+            font-size: 16px;
+            margin: 15px 0;
+            background: white;
+            transition: border-color 0.3s ease;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23A56684' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+        }
+
+        select:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        button {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            max-width: 400px;
+            margin-top: 15px;
+        }
+
+        button:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .decorative-line {
+            height: 2px;
+            background: linear-gradient(to right, transparent, var(--accent-color), transparent);
+            margin: 30px 0;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 50px 0;
+            animation: fadeInUp 0.8s ease-out 0.4s both;
+        }
+
+        .feature {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .feature:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature i {
+            font-size: 1.5em;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .feature h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.2em;
+            color: var(--secondary-color);
+            margin-bottom: 10px;
+        }
+
+        .testimonials {
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .testimonials h2 {
+            font-family: 'Cormorant Garamond', serif;
+            color: var(--secondary-color);
+            margin-bottom: 30px;
+        }
+
+        .testimonial {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .testimonial:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .testimonial img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+            object-fit: cover;
+        }
+
+        .testimonial p {
+            font-style: italic;
+            color: #555;
+            font-size: 0.9em;
+            margin: 10px 0;
+        }
+
+        .testimonial .name {
+            font-weight: bold;
+            color: var(--primary-color);
+            font-size: 0.9em;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="welcome-container">
+            <h1>{{ greeting }}</h1>
+            <p>Create your perfect event with us</p>
+            <div class="decorative-line"></div>
+            
+            <div class="event-selection">
+                <h2>Choose Your Event</h2>
+                <form method="post" action="{{ path('user_event_selection') }}">
+                    <select name="eventType" id="eventType">
+                        {% for option in eventOptions %}
+                            <option value="{{ option }}">{{ option }}</option>
+                        {% endfor %}
+                    </select>
+                    <button type="submit">Begin Your Journey</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="features">
+            <div class="feature">
+                <i class="fas fa-calendar-check"></i>
+                <h3>Easy Planning</h3>
+                <p>Streamlined process for effortless event organization</p>
+            </div>
+            <div class="feature">
+                <i class="fas fa-users"></i>
+                <h3>Expert Team</h3>
+                <p>Dedicated professionals to assist you every step</p>
+            </div>
+            <div class="feature">
+                <i class="fas fa-star"></i>
+                <h3>Customization</h3>
+                <p>Tailor every detail to match your vision</p>
+            </div>
+        </div>
+
+        <div class="testimonials">
+            <h2>What Our Clients Say</h2>
+            <div class="testimonial">
+                <img src="{{ asset('images/couple.jpeg') }}" alt="Client 1">
+                <p>"The team made our wedding day absolutely perfect!"</p>
+                <span class="name">- Sarah & John</span>
+            </div>
+            <div class="testimonial">
+                <img src="{{ asset('images/client2.jpeg') }}" alt="Client 2">
+                <p>"They planned the most memorable birthday party for us!"</p>
+                <span class="name">- Emily</span>
+            </div>
+            <div class="testimonial">
+                <img src="{{ asset('images/client3.jpeg') }}" alt="Client 3">
+                <p>"Our corporate event was flawlessly executed, thanks to the team!"</p>
+                <span class="name">- Company SUM</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const selectElement = document.getElementById('eventType');
+            const features = document.querySelectorAll('.feature');
+            const testimonials = document.querySelectorAll('.testimonial');
+
+            // Animate features and testimonials on scroll
+            function isElementInViewport(el) {
+                const rect = el.getBoundingClientRect();
+                return (
+                    rect.top >= 0 &&
+                    rect.left >= 0 &&
+                    rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+                    rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+                );
+            }
+
+            function animateOnScroll() {
+                features.forEach(feature => {
+                    if (isElementInViewport(feature)) {
+                        feature.style.opacity = '1';
+                        feature.style.transform = 'translateY(0)';
+                    }
+                });
+
+                testimonials.forEach(testimonial => {
+                    if (isElementInViewport(testimonial)) {
+                        testimonial.style.opacity = '1';
+                        testimonial.style.transform = 'translateY(0)';
+                    }
+                });
+            }
+
+            // Initial setup
+            features.forEach(feature => {
+                feature.style.opacity = '0';
+                feature.style.transform = 'translateY(20px)';
+                feature.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            });
+
+            testimonials.forEach(testimonial => {
+                testimonial.style.opacity = '0';
+                testimonial.style.transform = 'translateY(20px)';
+                testimonial.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            });
+
+            // Animate on load and scroll
+            animateOnScroll();
+            window.addEventListener('scroll', animateOnScroll);
+        });
+    </script>
+</body>
+</html>
+

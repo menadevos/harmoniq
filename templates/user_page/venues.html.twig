@@ -1,0 +1,10 @@
+<h3>Choisissez votre lieu :</h3>
+
+<form method="post" action="{{ path('user_confirm_venues') }}">
+    <select name="venueType">
+        {% for venue in venueOptions %}
+            <option value="{{ venue }}">{{ venue }}</option>
+        {% endfor %}
+    </select>
+    <button type="submit">Confirmer</button>
+</form>

@@ -1,0 +1,192 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'silk': {
+                            50: '#F7F3F5',
+                            100: '#EDE0E8',
+                            200: '#DBC4D4',
+                            300: '#C9A4B9',
+                            400: '#B7849E',
+                            500: '#A56684',
+                            600: '#8C4F6B',
+                            700: '#733A52',
+                            800: '#5A2639',
+                            900: '#411320'
+                        }
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-in-out',
+                        'slide-up': 'slideUp 0.5s ease-in-out',
+                        'pulse-glow': 'pulseGlow 2s infinite',
+                        'bounce-in': 'bounceIn 0.5s ease-in-out',
+                        'rotate-in': 'rotateIn 0.5s ease-in-out',
+                        'zoom-in': 'zoomIn 0.5s ease-in-out',
+                        'flash': 'flash 1s infinite'
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' }
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' }
+                        },
+                        pulseGlow: {
+                            '0%, 100%': { boxShadow: '0 0 10px rgba(165, 102, 132, 0.5)' },
+                            '50%': { boxShadow: '0 0 20px rgba(165, 102, 132, 0.8)' }
+                        },
+                        bounceIn: {
+                            '0%, 20%, 50%, 80%, 100%': { transform: 'translateY(0)' },
+                            '40%': { transform: 'translateY(-30px)' },
+                            '60%': { transform: 'translateY(-15px)' }
+                        },
+                        rotateIn: {
+                            '0%': { transform: 'rotate(-360deg)', opacity: '0' },
+                            '100%': { transform: 'rotate(0)', opacity: '1' }
+                        },
+                        zoomIn: {
+                            '0%': { transform: 'scale(0)', opacity: '0' },
+                            '100%': { transform: 'scale(1)', opacity: '1' }
+                        },
+                        flash: {
+                            '0%, 100%': { opacity: '1' },
+                            '50%': { opacity: '0' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom CSS for additional styling */
+        .card-hover-effect {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card-hover-effect:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="min-h-screen bg-silk-50 flex items-center justify-center p-6 animate-fade-in">
+    <div class="w-full max-w-6xl bg-white shadow-2xl rounded-3xl overflow-hidden animate-bounce-in">
+        <div class="bg-gradient-to-r from-silk-500 to-silk-700 p-8 text-center rounded-t-3xl animate-rotate-in">
+            <h2 class="text-4xl font-bold text-white drop-shadow-md animate-slide-up">
+                Event Dashboard
+            </h2>
+        </div>
+
+        <div class="p-8 space-y-8">
+            <!-- Flash Message for Payment Success -->
+            {% for message in app.session.flashbag.get('success') %}
+                <div class="p-4 mb-4 text-white bg-green-500 rounded-lg animate-fade-in flash" id="success-message">
+                    {{ message }}
+                </div>
+            {% endfor %}
+
+            <!-- Event Details Section -->
+            <div class="bg-silk-100 rounded-xl p-6 shadow-inner animate-zoom-in">
+                <h3 class="text-2xl font-semibold text-silk-700 mb-6">Event Details</h3>
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-600 font-medium">Date:</span>
+                        <span class="text-silk-800 font-bold">{{ eventSelection.eventDate|date('Y-m-d') }}</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-600 font-medium">Time:</span>
+                        <span class="text-silk-800 font-bold">{{ eventSelection.eventTime }}</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-600 font-medium">Total Price:</span>
+                        <span class="text-silk-800 font-bold">${{ eventSelection.totalPrice|number_format(2) }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Event Services Section -->
+            <div class="animate-slide-up">
+                <h3 class="text-2xl font-semibold text-silk-800 mb-6 text-center">Choose Event Services</h3>
+                <div class="flex flex-nowrap overflow-x-auto space-x-6 p-6 bg-silk-50 rounded-lg animate-bounce-in">
+                    {% for category in categories %}
+                        <a href="{{ path('user_select_category', {eventId: eventSelection.id, category: category}) }}"
+                            class="relative flex flex-col items-center justify-center w-72 h-72 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 group card-hover-effect">
+                            <div class="absolute inset-0 bg-cover bg-center opacity-80 group-hover:opacity-100 transition-opacity duration-300"
+                               style="background-image: url('/images/{{ category | lower }}.jpeg?v={{ random() }}');"
+                            ></div>
+                            <div class="relative z-10 text-white font-bold text-3xl bg-black bg-opacity-50 px-6 py-3 rounded-lg">
+                                {{ category }}
+                            </div>
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Payment Button -->
+            <div class="text-center mt-8 animate-slide-up">
+                <button id="show-payment-form"
+                    class="bg-silk-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-silk-700 transition duration-300 animate-pulse-glow">
+                    Procéder au paiement
+                </button>
+            </div>
+
+            <!-- Hidden Payment Form -->
+            <div id="payment-form" class="hidden mt-8 p-8 bg-white shadow-2xl rounded-2xl max-w-md mx-auto animate-zoom-in">
+                <h3 class="text-2xl font-semibold mb-6 text-center">Informations de paiement</h3>
+                <form id="paymentForm" method="POST" action="{{ path('user_process_payment', { eventId: eventSelection.id }) }}">
+                    <div class="mb-6">
+                        <label class="block text-gray-700 mb-2">Numéro de carte (Visa/MasterCard)</label>
+                        <input type="text" name="card_number" class="w-full border-2 border-silk-200 p-3 rounded-lg focus:border-silk-500 focus:ring-0" required>
+                    </div>
+
+                    <div class="mb-6 flex space-x-4">
+                        <div class="w-1/2">
+                            <label class="block text-gray-700 mb-2">Date d'expiration</label>
+                            <input type="text" name="expiry_date" placeholder="MM/YY" class="w-full border-2 border-silk-200 p-3 rounded-lg focus:border-silk-500 focus:ring-0" required>
+                        </div>
+                        <div class="w-1/2">
+                            <label class="block text-gray-700 mb-2">CVV</label>
+                            <input type="text" name="cvv" class="w-full border-2 border-silk-200 p-3 rounded-lg focus:border-silk-500 focus:ring-0" required>
+                        </div>
+                    </div>
+
+                    <!-- Total Amount Display -->
+                    <div class="mb-6">
+                        <label class="block text-gray-700 mb-2">Montant (€)</label>
+                        <input type="number" name="amount" class="w-full border-2 border-silk-200 p-3 rounded-lg focus:border-silk-500 focus:ring-0" value="{{ eventSelection.totalPrice|number_format(2) }}" readonly>
+                    </div>
+<button type="submit"
+    class="w-full bg-silk-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-silk-700 transition duration-300 animate-pulse-glow">
+    Payer maintenant
+</button>
+</form>
+</div>
+
+<script>
+document.getElementById('show-payment-form').addEventListener('click', function() {
+    document.getElementById('payment-form').classList.toggle('hidden');
+});
+
+// Redirect after success message
+{% for message in app.session.flashbag.get('success') %}
+    setTimeout(function() {
+        window.location.href = '{{ path('user_dashboard', { eventId: eventSelection.id }) }}';
+    }, 5000);
+{% endfor %}
+</script>
+</div>
+</div>
+</div>
+{% endblock %}
+
+
+

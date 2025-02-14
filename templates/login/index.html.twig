@@ -1,0 +1,184 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --silk-50: #F7F3F5;
+            --silk-100: #EDE0E8;
+            --silk-200: #DBC4D4;
+            --silk-300: #C9A4B9;
+            --silk-400: #B7849E;
+            --silk-500: #A56684;
+            --silk-600: #8C4F6B;
+            --silk-700: #733A52;
+            --silk-800: #5A2639;
+            --silk-900: #411320;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: radial-gradient(circle at bottom, var(--silk-900) 0%, var(--silk-700) 100%);
+            min-height: 100vh;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        @keyframes neon-pulse {
+            0%, 100% { 
+                text-shadow: 0 0 10px var(--silk-500), 0 0 20px var(--silk-400), 0 0 40px var(--silk-600);
+            }
+            50% { 
+                text-shadow: 0 0 20px var(--silk-400), 0 0 40px var(--silk-500), 0 0 80px var(--silk-700);
+            }
+        }
+
+        .container {
+            position: relative;
+            max-width: 450px;
+            margin: 4rem auto;
+            padding: 2rem;
+            background: rgba(30, 30, 42, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 1.5rem;
+            border: 3px solid rgba(165, 102, 132, 0.3);
+            box-shadow: 0 0 30px rgba(165, 102, 132, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .container:hover {
+            transform: translateY(-5px);
+            border-color: rgba(165, 102, 132, 0.5);
+            box-shadow: 0 0 40px rgba(165, 102, 132, 0.3);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            animation: neon-pulse 3s infinite;
+            background: linear-gradient(to right, var(--silk-500), var(--silk-400));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .welcome-text {
+            text-align: center;
+            color: var(--silk-200);
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+            opacity: 0.8;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(165, 102, 132, 0.3);
+            border-radius: 0.75rem;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--silk-500);
+            box-shadow: 0 0 15px rgba(165, 102, 132, 0.3);
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--silk-200);
+            font-weight: 500;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 0.75rem;
+            background: linear-gradient(to right, var(--silk-500), var(--silk-400));
+            border: none;
+            border-radius: 0.75rem;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 1rem 0;
+        }
+
+        .btn-submit:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 20px rgba(165, 102, 132, 0.4);
+        }
+
+        .signup-section {
+            text-align: center;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid rgba(165, 102, 132, 0.2);
+        }
+
+        .signup-link {
+            color: var(--silk-500);
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border: 2px solid var(--silk-500);
+            border-radius: 0.75rem;
+            display: inline-block;
+        }
+
+        .signup-link:hover {
+            background: var(--silk-500);
+            color: white;
+            transform: translateY(-2px);
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1>HARMONIQ ✨</h1>
+        <p class="welcome-text">Welcome back! Let's create magic together</p>
+
+        {% if error %}
+            <div class="alert alert-danger">
+                {{ error.messageKey|trans(error.messageData, 'security') }}
+            </div>
+        {% endif %}
+
+        <form method="post">
+            {% if app.user %}
+                <div class="alert alert-info">
+                    You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
+                </div>
+            {% endif %}
+
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+            <div class="form-group">
+                <label for="inputEmail" class="form-label">Email</label>
+                <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" required autofocus>
+            </div>
+
+            <div class="form-group">
+                <label for="inputPassword" class="form-label">Password</label>
+                <input type="password" name="password" id="inputPassword" class="form-control" required>
+            </div>
+
+            <button class="btn-submit" type="submit">Sign in</button>
+        </form>
+
+        <div class="signup-section">
+            <p class="signup-text">New to Harmoniq? 🌟</p>
+            <a href="{{ path('app_signup') }}" class="signup-link">Sign Up Here</a>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,208 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Welcome to HARMONIQ{% endblock %}
+
+{% block body %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HARMONIQ - Luxury Event Planning</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'silk': {
+                            50: '#F7F3F5',
+                            100: '#EDE0E8',
+                            200: '#DBC4D4',
+                            300: '#C9A4B9',
+                            400: '#B7849E',
+                            500: '#A56684',
+                            600: '#8C4F6B',
+                            700: '#733A52',
+                            800: '#5A2639',
+                            900: '#411320'
+                        }
+                    }
+                }
+            }
+        };
+    </script>
+    <style>
+        /* Floating animation */
+        .animate-float {
+            animation: floatUpDown 3s infinite ease-in-out;
+        }
+
+        @keyframes floatUpDown {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Fade-in animation */
+        .animate-fade {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeIn 1.2s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Hero animation */
+        .hero-animate {
+            animation: heroSlide 2s ease-out forwards;
+        }
+
+        @keyframes heroSlide {
+            from { transform: translateY(40px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Image zoom effect */
+        .hover-zoom {
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .hover-zoom:hover {
+            transform: scale(1.05);
+        }
+
+        /* Slide-in animation for services */
+        .animate-slide {
+            animation: slideIn 1.5s ease-out forwards;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* Bounce animation */
+        .animate-bounce {
+            animation: bounce 1s ease-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+    </style>
+</head>
+<body class="bg-silk-50 text-silk-900">
+
+    <!-- Navigation Bar -->
+    <header class="fixed top-0 left-0 w-full bg-white/80 backdrop-blur-md shadow-lg z-50 animate-fade">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-3xl font-bold tracking-wide text-silk-600">HARMONIQ</h1>
+            <ul class="flex space-x-6">
+                <li><a href="#about" class="hover:text-silk-500 transition">About</a></li>
+                <li><a href="#services" class="hover:text-silk-500 transition">Services</a></li>
+                <li><a href="#contact" class="hover:text-silk-500 transition">Contact</a></li>
+            </ul>
+            <a href="{{ path('app_homepage') }}" class="bg-silk-500 hover:bg-silk-400 text-white px-5 py-2 rounded-full shadow-lg transition transform hover:scale-105">Get Started</a>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="h-screen flex flex-col justify-center items-center text-center bg-gradient-to-b from-silk-100 to-silk-50 px-6 hero-animate">
+        <h1 class="text-5xl font-extrabold leading-tight animate-fade">Welcome to <span class="text-silk-600">HARMONIQ</span></h1>
+        <p class="mt-4 text-xl text-silk-700 animate-fade">Your ultimate event planning solution.</p>
+        <a href="{{ path('app_homepage') }}" class="mt-6 px-6 py-3 text-lg bg-silk-500 hover:bg-silk-400 text-white rounded-full shadow-md transition transform hover:scale-105">Get Started</a>
+        
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 bg-silk-50 text-center animate-fade">
+        <div class="container mx-auto">
+            <h2 class="text-4xl font-bold text-silk-700">About HARMONIQ</h2>
+            <p class="mt-4 text-xl text-silk-800 max-w-4xl mx-auto">
+                HARMONIQ is the perfect event planning solution designed to take your events to the next level. Whether you're hosting an intimate gathering or a grand corporate event, HARMONIQ helps you seamlessly plan every detail with ease. Experience a platform that's as luxurious and refined as the events it helps create.
+            </p>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="py-20 bg-silk-100 text-center animate-slide">
+        <div class="container mx-auto">
+            <h2 class="text-4xl font-bold text-silk-700">Our Services</h2>
+            <p class="mt-4 text-xl text-silk-800 max-w-4xl mx-auto">
+                From planning and designing to managing the execution of your events, HARMONIQ offers a wide range of services that cater to your every need. Let us handle the details, so you can focus on enjoying your event.
+            </p>
+            <div class="mt-10 grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="p-8 bg-white rounded-lg shadow-lg hover:scale-105 transition">
+                    <h3 class="text-2xl font-semibold text-silk-700">Event Planning</h3>
+                    <p class="mt-4 text-lg text-silk-800">Expert planning services for all types of events, from corporate meetings to weddings and everything in between.</p>
+                </div>
+                <div class="p-8 bg-white rounded-lg shadow-lg hover:scale-105 transition">
+                    <h3 class="text-2xl font-semibold text-silk-700">Design & Styling</h3>
+                    <p class="mt-4 text-lg text-silk-800">Create the perfect atmosphere with our design and styling services, tailored to suit your event's theme.</p>
+                </div>
+                <div class="p-8 bg-white rounded-lg shadow-lg hover:scale-105 transition">
+                    <h3 class="text-2xl font-semibold text-silk-700">Guest Management</h3>
+                    <p class="mt-4 text-lg text-silk-800">From invitations to RSVP management, we ensure that your guests are well taken care of throughout the event.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="py-20 bg-silk-100">
+        <div class="container mx-auto text-center">
+            <h2 class="text-4xl font-bold text-silk-700">What Our Users Say</h2>
+            <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Testimonial 1 -->
+                <div class="p-6 bg-white rounded-lg shadow-lg transition transform hover:scale-105 animate-fade">
+                    <img src="{{ asset('images/user1.jpg') }}" alt="Sarah a" class="w-16 h-16 rounded-full mx-auto">
+                    <p class="mt-4 text-lg text-silk-800 italic">"Harmoniq made planning my wedding stress-free!"</p>
+                    <h3 class="mt-2 text-silk-700 font-semibold">- Sarah K.</h3>
+                </div>
+                <!-- Testimonial 2 -->
+                <div class="p-6 bg-white rounded-lg shadow-lg transition transform hover:scale-105 animate-fade">
+                    <img src="{{ asset('images/user2.jpg') }}" alt="anas benani" class="w-16 h-16 rounded-full mx-auto">
+                    <p class="mt-4 text-lg text-silk-800 italic">"A true game-changer for corporate events!"</p>
+                    <h3 class="mt-2 text-silk-700 font-semibold">- James P.</h3>
+                </div>
+                <!-- Testimonial 3 -->
+                <div class="p-6 bg-white rounded-lg shadow-lg transition transform hover:scale-105 animate-fade">
+                    <img src="{{ asset('images/user3.jpg') }}" alt="mina bouzid" class="w-16 h-16 rounded-full mx-auto">
+                    <p class="mt-4 text-lg text-silk-800 italic">"The easiest way to organize events effortlessly!"</p>
+                    <h3 class="mt-2 text-silk-700 font-semibold">- Linda M.</h3>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery" class="py-20 bg-silk-50">
+        <div class="container mx-auto text-center">
+            <h2 class="text-4xl font-bold text-silk-700">Gallery</h2>
+            <p class="mt-4 text-xl text-silk-800">Take a look at some of the exquisite events we’ve helped plan.</p>
+            <div class="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4">
+                <img src="{{ asset('images/event1.jpg') }}" alt="Event 1" class="h-40 w-full object-cover rounded-lg shadow-lg hover-zoom animate-fade">
+                <img src="{{ asset('images/event2.jpg') }}" alt="Event 2" class="h-40 w-full object-cover rounded-lg shadow-lg hover-zoom animate-fade">
+                <img src="{{ asset('images/event3.jpg') }}" alt="Event 3" class="h-40 w-full object-cover rounded-lg shadow-lg hover-zoom animate-fade">
+                <img src="{{ asset('images/event4.jpg') }}" alt="Event 4" class="h-40 w-full object-cover rounded-lg shadow-lg hover-zoom animate-fade">
+                <img src="{{ asset('images/event5.jpg') }}" alt="Event 5" class="h-40 w-full object-cover rounded-lg shadow-lg hover-zoom animate-fade">
+                <img src="{{ asset('images/event6.jpg') }}" alt="Event 6" class="h-40 w-full object-cover rounded-lg shadow-lg hover-zoom animate-fade">
+                <img src="{{ asset('images/event7.jpg') }}" alt="Event 7" class="h-40 w-full object-cover rounded-lg shadow-lg hover-zoom animate-fade">
+                <img src="{{ asset('images/event8.jpg') }}" alt="Event 8" class="h-40 w-full object-cover rounded-lg shadow-lg hover-zoom animate-fade">
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-10 bg-silk-50 text-center">
+        <p class="text-silk-700">Contact us at: <a href="mailto:info@harmoniq.com" class="text-silk-500 underline">info@harmoniq.com</a></p>
+        <p class="mt-4 text-silk-600">&copy; 2025 HARMONIQ. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>
+{% endblock %}

@@ -1,0 +1,290 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Admin Dashboard{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Nunito:wght@300;400;600&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'silk': {
+                            50: '#F7F3F5',
+                            100: '#EDE0E8',
+                            200: '#DBC4D4',
+                            300: '#C9A4B9',
+                            400: '#B7849E',
+                            500: '#A56684',
+                            600: '#8C4F6B',
+                            700: '#733A52',
+                            800: '#5A2639',
+                            900: '#411320'
+                        },
+                        'gold': '#D4AF37',
+                    },
+                    fontFamily: {
+                        'sans': ['Nunito', 'sans-serif'],
+                        'serif': ['Cormorant Garamond', 'serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #411320, #8C4F6B);
+        }
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+        .card-hover {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: linear-gradient(120deg, #ffffff 30%, #f0f0f0 38%, #f0f0f0 40%, #ffffff 48%);
+            background-size: 200% 100%;
+            background-position: 100% 0;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+            animation: shimmer 1.5s infinite;
+        }
+        .sidebar-link {
+            position: relative;
+            overflow: hidden;
+        }
+        .sidebar-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(120deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: all 0.6s;
+        }
+        .sidebar-link:hover::before {
+            left: 100%;
+        }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        .float-animation {
+            animation: float 4s ease-in-out infinite;
+        }
+    </style> 
+{% endblock %}
+
+{% block body %}
+<div class="flex h-screen bg-silk-50">
+    <!-- Sidebar -->
+    <aside class="w-64 gradient-bg text-white">
+        <div class="p-5">
+            <div class="relative w-32 h-32 mx-auto mb-4 float-animation">
+                <img src="{{ asset('images/admin.jpeg') }}" alt="Admin Avatar" class="w-full h-full rounded-full object-cover border-3 border-gold shadow-lg">
+                <div class="absolute bottom-0 right-0 bg-green-400 w-4 h-4 rounded-full border-2 border-white"></div>
+            </div>
+            <h2 class="text-xl font-serif font-bold text-center text-gold mb-2">Welcome, Admin</h2>
+            <p class="text-xs text-center text-silk-200">Manage my work</p>
+        </div>
+        <nav class="mt-6">
+            <a href="{{ path('admin_dashboard') }}" class="sidebar-link block py-2 px-4 text-silk-100 hover:bg-silk-700 transition-all duration-300 ease-in-out">
+                <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
+            </a>
+            <a href="{{ path('admin_events') }}" class="sidebar-link block py-2 px-4 text-silk-100 hover:bg-silk-700 transition-all duration-300 ease-in-out">
+                <i class="fas fa-calendar-alt mr-2"></i>Events
+            </a>
+            <a href="{{ path('admin_companies') }}" class="sidebar-link block py-2 px-4 text-silk-100 hover:bg-silk-700 transition-all duration-300 ease-in-out">
+                <i class="fas fa-building mr-2"></i>Companies
+            </a>
+            <a href="{{ path('admin_event_statistics') }}" class="sidebar-link block py-2 px-4 text-silk-100 hover:bg-silk-700 transition-all duration-300 ease-in-out">
+                <i class="fas fa-chart-line mr-2"></i>Statistics
+            </a>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-6 overflow-y-auto bg-gradient-to-br from-silk-50 to-silk-100">
+        <h1 class="text-4xl font-serif font-bold text-silk-800 mb-8 border-b border-gold pb-2">Admin Dashboard</h1>
+        
+        <!-- Statistics Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Total Events Card -->
+            <div class="bg-white rounded-lg shadow-md p-5 card-hover">
+                <div class="flex items-center justify-between mb-3">
+                    <div>
+                        <p class="text-xs text-silk-600 font-medium uppercase tracking-wide">Total Events</p>
+                        <h3 class="text-3xl font-bold text-silk-800 mt-1">{{ totalEvents }}</h3>
+                    </div>
+                    <div class="bg-silk-100 rounded-full p-3">
+                        <i class="fas fa-calendar-alt text-2xl text-silk-600"></i>
+                    </div>
+                </div>
+                <div class="w-full bg-silk-200 rounded-full h-1.5">
+                    <div class="bg-silk-600 h-1.5 rounded-full" style="width: {{ (totalEvents / 100) * 100 }}%"></div>
+                </div>
+            </div>
+
+            <!-- Available Events Card -->
+            <div class="bg-white rounded-lg shadow-md p-5 card-hover">
+                <div class="flex items-center justify-between mb-3">
+                    <div>
+                        <p class="text-xs text-silk-600 font-medium uppercase tracking-wide">Available Events</p>
+                        <h3 class="text-3xl font-bold text-silk-800 mt-1">{{ availableEvents }}</h3>
+                    </div>
+                    <div class="bg-silk-100 rounded-full p-3">
+                        <i class="fas fa-calendar-check text-2xl text-silk-600"></i>
+                    </div>
+                </div>
+                <div class="w-full bg-silk-200 rounded-full h-1.5">
+                    <div class="bg-green-500 h-1.5 rounded-full" style="width: {{ (availableEvents / totalEvents) * 100 }}%"></div>
+                </div>
+            </div>
+
+            <!-- Companies Involved Card -->
+            <div class="bg-white rounded-lg shadow-md p-5 card-hover">
+                <div class="flex items-center justify-between mb-3">
+                    <div>
+                        <p class="text-xs text-silk-600 font-medium uppercase tracking-wide">Companies Involved</p>
+                        <h3 class="text-3xl font-bold text-silk-800 mt-1">{{ totalCompanies }}</h3>
+                    </div>
+                    <div class="bg-silk-100 rounded-full p-3">
+                        <i class="fas fa-building text-2xl text-silk-600"></i>
+                    </div>
+                </div>
+                <div class="w-full bg-silk-200 rounded-full h-1.5">
+                    <div class="bg-gold h-1.5 rounded-full" style="width: {{ (totalCompanies / 50) * 100 }}%"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Event Statistics Section -->
+        <section class="mt-12">
+            <h2 class="text-2xl font-serif font-semibold text-silk-800 mb-4">Event Trends</h2>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div id="eventChart" class="w-full h-64"></div>
+            </div>
+        </section>
+    </main>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <!-- FontAwesome for icons -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <!-- ApexCharts for beautiful, interactive charts -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var options = {
+                series: [{
+                    name: 'Events',
+                    data: [30, 40, 35, 50, 49, 60, 70, 91, 125]
+                }],
+                chart: {
+                    height: 256,
+                    type: 'area',
+                    fontFamily: 'Nunito, sans-serif',
+                    animations: {
+                        enabled: true,
+                        easing: 'easeinout',
+                        speed: 800,
+                        animateGradually: {
+                            enabled: true,
+                            delay: 150
+                        },
+                        dynamicAnimation: {
+                            enabled: true,
+                            speed: 350
+                        }
+                    }
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                stroke: {
+                    curve: 'smooth',
+                    width: 2,
+                },
+                fill: {
+                    type: 'gradient',
+                    gradient: {
+                        shadeIntensity: 1,
+                        opacityFrom: 0.7,
+                        opacityTo: 0.3,
+                        stops: [0, 90, 100]
+                    }
+                },
+                colors: ['#A56684'],
+                title: {
+                    text: 'Event Trends',
+                    align: 'left',
+                    style: {
+                        fontSize: '16px',
+                        fontWeight: 600,
+                        fontFamily: 'Cormorant Garamond, serif',
+                        color: '#5A2639'
+                    }
+                },
+                grid: {
+                    borderColor: '#e0e0e0',
+                    strokeDashArray: 5,
+                    xaxis: {
+                        lines: {
+                            show: true
+                        }
+                    },
+                    yaxis: {
+                        lines: {
+                            show: true
+                        }
+                    },
+                },
+                xaxis: {
+                    categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
+                    labels: {
+                        style: {
+                            fontSize: '12px',
+                            fontFamily: 'Nunito, sans-serif',
+                        }
+                    }
+                },
+                yaxis: {
+                    labels: {
+                        style: {
+                            fontSize: '12px',
+                            fontFamily: 'Nunito, sans-serif',
+                        }
+                    }
+                },
+                tooltip: {
+                    x: {
+                        format: 'dd/MM/yy HH:mm'
+                    },
+                }
+            };
+
+            var chart = new ApexCharts(document.querySelector("#eventChart"), options);
+            chart.render();
+
+            // Add scroll reveal animation to cards
+            const cards = document.querySelectorAll('.card-hover');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 100 * (index + 1));
+            });
+        });
+    </script>
+{% endblock %}
+

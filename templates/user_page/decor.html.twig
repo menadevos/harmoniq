@@ -1,0 +1,10 @@
+<h3>Choisissez votre décoration :</h3>
+
+<form method="post" action="{{ path('user_confirm_decor') }}">
+    <select name="decorType">
+        {% for decor in decorOptions %}
+            <option value="{{ decor }}">{{ decor }}</option>
+        {% endfor %}
+    </select>
+    <button type="submit">Confirmer</button>
+</form>

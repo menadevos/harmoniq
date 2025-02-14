@@ -1,0 +1,193 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'silk': {
+                            50: '#F7F3F5',
+                            100: '#EDE0E8',
+                            200: '#DBC4D4',
+                            300: '#C9A4B9',
+                            400: '#B7849E',
+                            500: '#A56684',
+                            600: '#8C4F6B',
+                            700: '#733A52',
+                            800: '#5A2639',
+                            900: '#411320'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Animations personnalisées */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes gradientBackground {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .fade-in {
+            animation: fadeIn 1s ease-out forwards;
+        }
+
+        .animated-background {
+            background: linear-gradient(135deg, var(--tw-gradient-stops));
+            background-size: 400% 400%;
+            animation: gradientBackground 15s ease infinite;
+        }
+
+        .input-hover {
+            transition: all 0.3s ease;
+        }
+
+        .input-hover:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 15px rgba(165, 102, 132, 0.2);
+        }
+
+        .button-hover {
+            transition: all 0.3s ease;
+        }
+
+        .button-hover:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(165, 102, 132, 0.3);
+        }
+
+        .floating-label {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .floating-label input,
+        .floating-label select {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid var(--tw-border-color);
+            border-radius: 0.5rem;
+            background: transparent;
+            transition: all 0.3s ease;
+        }
+
+        .floating-label input:focus,
+        .floating-label select:focus {
+            border-color: var(--tw-ring-color);
+            box-shadow: 0 0 10px rgba(165, 102, 132, 0.3);
+        }
+
+        .floating-label label {
+            position: absolute;
+            top: 50%;
+            left: 1rem;
+            transform: translateY(-50%);
+            background: white;
+            padding: 0 0.5rem;
+            color: var(--tw-text-color);
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+
+        .floating-label input:focus + label,
+        .floating-label input:not(:placeholder-shown) + label,
+        .floating-label select:focus + label,
+        .floating-label select:not([value=""]) + label {
+            top: 0;
+            font-size: 0.875rem;
+            color: var(--tw-ring-color);
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="min-h-screen flex items-center justify-center p-6 animated-background fade-in bg-gradient-to-r from-silk-50 via-silk-100 to-silk-200">
+    <div class="flex flex-row items-stretch space-x-6 max-w-5xl w-full bg-white/90 backdrop-blur-lg shadow-2xl rounded-3xl overflow-hidden p-6">
+        <!-- Event Image -->
+        <div class="w-1/3 flex-shrink-0 rounded-l-3xl overflow-hidden">
+            <img src="/images/{{ event|lower|replace({' ': '_'}) }}.jpeg" alt="{{ event }}" class="w-full h-full object-cover rounded-l-3xl shadow-xl">
+        </div>
+        
+        <!-- Booking Form -->
+        <div class="w-2/3 flex flex-col justify-center">
+            <div class="bg-silk-500 p-6 text-center rounded-t-3xl">
+                <h2 class="text-3xl font-bold text-white drop-shadow-md">
+                    Book Your {{ event }}
+                </h2>
+            </div>
+            
+            <form method="post" action="{{ path('user_event_details') }}" class="p-6 space-y-6">
+                <input type="hidden" name="eventType" value="{{ event }}">
+                
+                <!-- Event Date -->
+                <div class="floating-label">
+                    <input 
+                        type="date" 
+                        id="eventDate" 
+                        name="eventDate" 
+                        required 
+                        class="input-hover border-silk-300 focus:ring-silk-500 focus:border-silk-500"
+                    >
+                    <label for="eventDate" class="text-silk-700">Event Date</label>
+                </div>
+
+                <!-- Event Time -->
+                <div class="floating-label">
+                    <select 
+                        name="eventTime" 
+                        required 
+                        class="input-hover border-silk-300 focus:ring-silk-500 focus:border-silk-500"
+                    >
+                        <option value="" disabled selected>Choose a time</option>
+                        {% for time in availableTimes %}
+                            <option value="{{ time }}">{{ time }}</option>
+                        {% endfor %}
+                    </select>
+                    <label for="eventTime" class="text-silk-700">Select Time</label>
+                </div>
+
+                <!-- Submit Button -->
+                <button 
+                    type="submit" 
+                    class="w-full bg-silk-500 text-white py-4 rounded-xl hover:bg-silk-600 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-2xl button-hover"
+                >
+                    Confirm Booking
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script>
+        // Confetti Animation on Form Submission
+        document.querySelector('form').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            // Trigger confetti
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+
+            // Submit the form after the animation
+            setTimeout(() => {
+                this.submit();
+            }, 1000);
+        });
+    </script>
+{% endblock %}

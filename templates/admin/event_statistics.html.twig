@@ -1,0 +1,298 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Event Statistics{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'silk': {
+                            50: '#F7F3F5',
+                            100: '#EDE0E8',
+                            200: '#DBC4D4',
+                            300: '#C9A4B9',
+                            400: '#B7849E',
+                            500: '#A56684',
+                            600: '#8C4F6B',
+                            700: '#733A52',
+                            800: '#5A2639',
+                            900: '#411320'
+                        },
+                        'gold': '#D4AF37',
+                    },
+                    fontFamily: {
+                        'sans': ['Poppins', 'sans-serif'],
+                        'serif': ['Playfair Display', 'serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #5A2639, #8C4F6B);
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            height: 200px;
+            transition: all 0.3s ease-in-out;
+        }
+        .chart-container:hover {
+            transform: scale(1.02);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .stat-card {
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 80%);
+            transform: scale(0);
+            transition: transform 0.4s ease-out;
+        }
+        .stat-card:hover::before {
+            transform: scale(1);
+        }
+        .stat-card:hover {
+            transform: translateY(-3px);
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .fade-in-up {
+            animation: fadeInUp 0.4s ease-out forwards;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="min-h-screen bg-gradient-to-br from-silk-50 to-silk-100 flex flex-col items-center py-8 px-4">
+    <h1 class="text-3xl font-serif font-bold text-silk-800 mb-6 fade-in-up" style="animation-delay: 0.1s;">Event Statistics</h1>
+
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full max-w-4xl mb-8">
+        {% if totalRevenue is defined %}
+        <div class="stat-card gradient-bg text-white p-4 rounded-xl shadow-md text-center relative overflow-hidden fade-in-up" style="animation-delay: 0.2s;">
+            <h2 class="text-2xl font-bold mb-1">{{ totalRevenue }} DH</h2>
+            <p class="text-sm font-light">Total Revenue</p>
+        </div>
+        {% endif %}
+
+        <div class="stat-card gradient-bg text-white p-4 rounded-xl shadow-md text-center relative overflow-hidden fade-in-up" style="animation-delay: 0.3s;">
+            <h2 class="text-2xl font-bold mb-1">{{ eventTypes|length }}</h2>
+            <p class="text-sm font-light">Event Types</p>
+        </div>
+
+        <div class="stat-card gradient-bg text-white p-4 rounded-xl shadow-md text-center relative overflow-hidden fade-in-up" style="animation-delay: 0.4s;">
+            <h2 class="text-2xl font-bold mb-1">{{ eventDates|length }}</h2>
+            <p class="text-sm font-light">Paid Events</p>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-5xl">
+        <div class="bg-white p-4 rounded-xl shadow-md w-full fade-in-up" style="animation-delay: 0.5s;">
+            <h2 class="text-xl font-serif font-bold text-silk-700 mb-3">Event Type Distribution</h2>
+            <div class="chart-container">
+                <canvas id="eventTypeChart"></canvas>
+            </div>
+        </div>
+
+        <div class="bg-white p-4 rounded-xl shadow-md w-full fade-in-up" style="animation-delay: 0.6s;">
+            <h2 class="text-xl font-serif font-bold text-silk-700 mb-3">Events Per Date</h2>
+            <div class="chart-container">
+                <canvas id="eventDateChart"></canvas>
+            </div>
+        </div>
+
+        <div class="bg-white p-4 rounded-xl shadow-md w-full md:col-span-2 fade-in-up" style="animation-delay: 0.7s;">
+            <h2 class="text-xl font-serif font-bold text-silk-700 mb-3">Events Per Time</h2>
+            <div class="chart-container">
+                <canvas id="eventTimeChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-8 fade-in-up" style="animation-delay: 0.8s;">
+        <a href="{{ path('admin_dashboard') }}" class="bg-silk-600 text-white px-6 py-2 rounded-full text-sm font-semibold shadow-md hover:bg-silk-700 transition-all duration-300 ease-in-out transform hover:scale-105">
+            Back to Dashboard
+        </a>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const eventTypeData = {{ eventTypes|json_encode|raw }};
+        const eventDateData = {{ eventDates|json_encode|raw }};
+        const eventTimeData = {{ eventTimes|json_encode|raw }};
+
+        const palette = ['#F6BD60', '#F7EDE2', '#F5CAC3', '#84A59D', '#F28482', '#A56684', '#8C4F6B', '#733A52'];
+
+        function formatChartData(data, label) {
+            return {
+                labels: Object.keys(data),
+                datasets: [{
+                    label: label,
+                    data: Object.values(data),
+                    backgroundColor: palette,
+                    borderColor: 'rgba(255, 255, 255, 0.8)',
+                    borderWidth: 1
+                }]
+            };
+        }
+
+        const commonOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        usePointStyle: true,
+                        padding: 10,
+                        font: {
+                            size: 10,
+                            family: "'Poppins', sans-serif"
+                        }
+                    }
+                }
+            },
+            animation: {
+                duration: 1500,
+                easing: 'easeOutQuart'
+            }
+        };
+
+        new Chart(document.getElementById('eventTypeChart').getContext('2d'), {
+            type: 'doughnut',
+            data: formatChartData(eventTypeData, 'Event Types'),
+            options: {
+                ...commonOptions,
+                cutout: '60%',
+                plugins: {
+                    ...commonOptions.plugins,
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const label = context.label || '';
+                                const value = context.parsed || 0;
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = ((value / total) * 100).toFixed(1);
+                                return `${label}: ${value} (${percentage}%)`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        new Chart(document.getElementById('eventDateChart').getContext('2d'), {
+            type: 'bar',
+            data: formatChartData(eventDateData, 'Events Per Date'),
+            options: {
+                ...commonOptions,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            precision: 0,
+                            font: {
+                                size: 10,
+                                family: "'Poppins', sans-serif"
+                            }
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            font: {
+                                size: 10,
+                                family: "'Poppins', sans-serif"
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    ...commonOptions.plugins,
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `Events: ${context.parsed.y}`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        new Chart(document.getElementById('eventTimeChart').getContext('2d'), {
+            type: 'line',
+            data: formatChartData(eventTimeData, 'Events Per Time'),
+            options: {
+                ...commonOptions,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            precision: 0,
+                            font: {
+                                size: 10,
+                                family: "'Poppins', sans-serif"
+                            }
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            font: {
+                                size: 10,
+                                family: "'Poppins', sans-serif"
+                            }
+                        }
+                    }
+                },
+                elements: {
+                    line: {
+                        tension: 0.3,
+                        borderWidth: 2,
+                        borderColor: '#A56684'
+                    },
+                    point: {
+                        radius: 3,
+                        hoverRadius: 5
+                    }
+                },
+                plugins: {
+                    ...commonOptions.plugins,
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `Events: ${context.parsed.y}`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}
+

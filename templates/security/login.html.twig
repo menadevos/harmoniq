@@ -1,0 +1,137 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'silk': {
+                            50: '#F7F3F5',
+                            100: '#EDE0E8',
+                            200: '#DBC4D4',
+                            300: '#C9A4B9',
+                            400: '#B7849E',
+                            500: '#A56684',
+                            600: '#8C4F6B',
+                            700: '#733A52',
+                            800: '#5A2639',
+                            900: '#411320'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .elegant-gradient {
+            background: linear-gradient(45deg, #A56684, #8C4F6B, #733A52);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: gradient-flow 15s ease infinite;
+        }
+
+        @keyframes gradient-flow {
+            0% { background-position: 200% 0%; }
+            50% { background-position: 0% 100%; }
+            100% { background-position: 200% 0%; }
+        }
+
+        .shadow-glow {
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1), 0 0 25px rgba(0, 0, 0, 0.2);
+            transition: box-shadow 0.3s ease-in-out;
+        }
+
+        .shadow-glow:hover {
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.2), 0 0 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .hover-transform:hover {
+            transform: translateY(-5px) scale(1.05);
+        }
+
+        .input-focus:focus {
+            border-color: #A56684;
+            box-shadow: 0 0 10px rgba(165, 102, 132, 0.5);
+        }
+
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="min-h-screen flex items-center justify-center bg-silk-50">
+        <div class="flex max-w-4xl w-full rounded-3xl shadow-2xl">
+            <!-- Left side with the image -->
+            <div class="hidden lg:block w-1/2 bg-silk-100 rounded-l-3xl">
+                <img src="{{ asset('images/login.jpeg') }}" alt="Event Image" class="w-full h-full object-cover rounded-l-3xl" />
+            </div>
+
+            <!-- Right side with the login form -->
+            <div class="relative z-10 w-full lg:w-1/2 bg-white/90 backdrop-blur-lg rounded-r-3xl py-10 px-12
+                    transform transition-all duration-700 hover:scale-[1.02] shadow-2xl text-center">
+                <h1 class="text-5xl font-bold mb-4 elegant-gradient tracking-wider">
+                    HARMONIQ ✨
+                </h1>
+                <p class="text-xl text-silk-600 mb-6 font-light italic tracking-wide pulse-animation">
+                    Welcome back! Let’s create magic together
+                </p>
+
+                {% if error %}
+                    <div class="bg-red-100 text-red-600 p-3 rounded-lg mb-4">
+                        {{ error.messageKey|trans(error.messageData, 'security') }}
+                    </div>
+                {% endif %}
+
+                <form method="post" class="space-y-4">
+                    {% if app.user %}
+                        <div class="bg-blue-100 text-blue-600 p-3 rounded-lg">
+                            You are logged in as {{ app.user.userIdentifier }},
+                            <a href="{{ path('app_logout') }}" class="text-silk-500 hover:underline">Logout</a>
+                        </div>
+                    {% endif %}
+
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                    <input type="email" name="email" value="{{ last_username }}" placeholder="Your Email"
+                        class="w-full p-3 border border-silk-300 rounded-lg focus:outline-none input-focus" required autofocus>
+
+                    <input type="password" name="password" placeholder="Your Password"
+                        class="w-full p-3 border border-silk-300 rounded-lg focus:outline-none input-focus" required>
+
+                    <button type="submit"
+                        class="w-full bg-silk-500 text-white font-bold py-3 rounded-full
+                               hover:bg-silk-600 transition-all duration-500
+                               transform hover:scale-105 hover:translate-y-[-5px] shadow-md hover:shadow-xl
+                               text-sm uppercase tracking-wider hover-transform">
+                        Sign in
+                    </button>
+                </form>
+
+                <div class="mt-6">
+                    <p class="text-silk-600">New to Harmoniq?</p>
+                    <a href="{{ path('app_signup') }}" class="text-silk-500 font-bold hover:underline">
+                        Create an Account
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+
+
+

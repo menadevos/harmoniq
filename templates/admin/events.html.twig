@@ -1,0 +1,153 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Paid Events{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+        :root {
+            --silk-50: #F7F3F5;
+            --silk-100: #EDE0E8;
+            --silk-200: #DBC4D4;
+            --silk-300: #C9A4B9;
+            --silk-400: #B7849E;
+            --silk-500: #A56684;
+            --silk-600: #8C4F6B;
+            --silk-700: #733A52;
+            --silk-800: #5A2639;
+            --silk-900: #411320;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--silk-50) 0%, var(--silk-100) 100%);
+        }
+
+        .glassmorphism {
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        .table-container {
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        .table-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .table-container::-webkit-scrollbar-track {
+            background: var(--silk-100);
+        }
+
+        .table-container::-webkit-scrollbar-thumb {
+            background-color: var(--silk-400);
+            border-radius: 20px;
+        }
+
+        .animate-float {
+            animation: floating 3s ease-in-out infinite;
+        }
+
+        @keyframes floating {
+            0% { transform: translate(0,  0px); }
+            50%  { transform: translate(0, 15px); }
+            100%   { transform: translate(0, -0px); }
+        }
+
+        .hover-trigger .hover-target {
+            transition: all 0.3s ease;
+        }
+
+        .hover-trigger:hover .hover-target {
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="min-h-screen flex flex-col items-center py-10 px-4">
+    <h1 class="text-5xl font-bold text-silk-800 mb-10 animate__animated animate__fadeInDown animate-float">
+        Paid Events
+    </h1>
+    
+    <div class="w-full max-w-7xl glassmorphism p-8 animate__animated animate__fadeIn animate__delay-1s">
+        <div class="table-container">
+            <table class="min-w-full bg-white bg-opacity-70 rounded-lg overflow-hidden">
+                <thead class="bg-silk-600">
+                    <tr>
+                        <th class="py-3 px-4 text-left text-silk-50 font-semibold">Event Type</th>
+                        <th class="py-3 px-4 text-left text-silk-50 font-semibold">Event Date</th>
+                        <th class="py-3 px-4 text-left text-silk-50 font-semibold">Event Time</th>
+                        <th class="py-3 px-4 text-left text-silk-50 font-semibold">Food Type</th>
+                        <th class="py-3 px-4 text-left text-silk-50 font-semibold">Selected Restaurant</th>
+                        <th class="py-3 px-4 text-left text-silk-50 font-semibold">Decor Type</th>
+                        <th class="py-3 px-4 text-left text-silk-50 font-semibold">Music Type</th>
+                        <th class="py-3 px-4 text-left text-silk-50 font-semibold">Photography Type</th>
+                        <th class="py-3 px-4 text-left text-silk-50 font-semibold">Venue Type</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for event in paidEvents %}
+                    <tr class="hover-trigger">
+                        <td class="py-3 px-4 border-b border-silk-200 hover-target">
+                            <span class="font-semibold text-silk-700">{{ event.eventType }}</span>
+                        </td>
+                        <td class="py-3 px-4 border-b border-silk-200 hover-target">
+                            {{ event.eventDate|date('Y-m-d') }}
+                        </td>
+                        <td class="py-3 px-4 border-b border-silk-200 hover-target">
+                            {{ event.eventTime }}
+                        </td>
+                        <td class="py-3 px-4 border-b border-silk-200 hover-target">
+                            {{ event.foodType }}
+                        </td>
+                        <td class="py-3 px-4 border-b border-silk-200 hover-target">
+                            {{ event.selectedRestaurant }}
+                        </td>
+                        <td class="py-3 px-4 border-b border-silk-200 hover-target">
+                            {{ event.decorType }}
+                        </td>
+                        <td class="py-3 px-4 border-b border-silk-200 hover-target">
+                            {{ event.musicType }}
+                        </td>
+                        <td class="py-3 px-4 border-b border-silk-200 hover-target">
+                            {{ event.photographyType }}
+                        </td>
+                        <td class="py-3 px-4 border-b border-silk-200 hover-target">
+                            {{ event.venueType }}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+             <a href="{{ path('admin_dashboard') }}" class="mt-4 inline-block text-black text-lg underline">← Back to Dashboard</a>
+        </div>
+        
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const rows = document.querySelectorAll('tbody tr');
+            rows.forEach((row, index) => {
+                row.classList.add('animate__animated', 'animate__fadeInUp');
+                row.style.animationDelay = `${index * 0.1}s`;
+            });
+        });
+    </script>
+{% endblock %}

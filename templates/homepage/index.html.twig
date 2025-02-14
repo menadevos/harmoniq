@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HARMONIQ - Luxury Event Planning</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'silk': {
+                            50: '#F7F3F5',
+                            100: '#EDE0E8',
+                            200: '#DBC4D4',
+                            300: '#C9A4B9',
+                            400: '#B7849E',
+                            500: '#A56684',
+                            600: '#8C4F6B',
+                            700: '#733A52',
+                            800: '#5A2639',
+                            900: '#411320'
+                        }
+                    },
+                    keyframes: {
+                        'floating': {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-15px)' }
+                        },
+                        'subtle-spin': {
+                            '0%': { transform: 'rotate(0deg)' },
+                            '50%': { transform: 'rotate(5deg)' },
+                            '100%': { transform: 'rotate(0deg)' }
+                        },
+                        'pulse-glow': {
+                            '0%, 100%': { 
+                                transform: 'scale(1)',
+                                boxShadow: '0 0 0 0 rgba(165, 102, 132, 0.4)'
+                            },
+                            '50%': { 
+                                transform: 'scale(1.05)',
+                                boxShadow: '0 0 20px 5px rgba(165, 102, 132, 0.6)'
+                            }
+                        },
+                        'gradient-flow': {
+                            '0%': { backgroundPosition: '0% 50%' },
+                            '50%': { backgroundPosition: '100% 50%' },
+                            '100%': { backgroundPosition: '0% 50%' }
+                        },
+                        'particle-dance': {
+                            '0%': { transform: 'translateX(0) translateY(0) rotate(0deg)' },
+                            '50%': { transform: 'translateX(10px) translateY(-10px) rotate(180deg)' },
+                            '100%': { transform: 'translateX(0) translateY(0) rotate(360deg)' }
+                        }
+                    },
+                    animation: {
+                        'floating': 'floating 5s ease-in-out infinite',
+                        'subtle-spin': 'subtle-spin 3s ease-in-out infinite',
+                        'pulse-glow': 'pulse-glow 4s ease-in-out infinite',
+                        'gradient-flow': 'gradient-flow 15s ease infinite',
+                        'particle-dance': 'particle-dance 10s ease-in-out infinite'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .elegant-gradient {
+            background: linear-gradient(45deg, #A56684, #8C4F6B, #733A52);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: gradient-flow 15s ease infinite;
+        }
+        .animated-backdrop {
+            background: radial-gradient(circle at 30% 30%, rgba(165,102,132,0.1), transparent 50%);
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-silk-50 flex items-center justify-center font-sans overflow-hidden relative">
+    <!-- Animated Background Particles -->
+    <div class="absolute inset-0 pointer-events-none opacity-40">
+        {% for i in 0..40 %}
+            <div class="absolute animate-particle-dance text-silk-200"
+                 style="top: {{ random() * 100 }}%; 
+                        left: {{ random() * 100 }}%; 
+                        font-size: {{ random() * 2 + 0.5 }}rem;
+                        animation-delay: {{ random() * 5 }}s;">
+                ✧
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Main Container with Reduced Height and Enhanced Animations -->
+    <div class="relative z-10 max-w-2xl w-full bg-white/90 backdrop-blur-lg rounded-3xl py-10 px-12 
+                transform transition-all duration-700 hover:scale-[1.02] 
+                animate-pulse-glow
+                shadow-2xl animated-backdrop">
+        <div class="text-center">
+            <!-- Animated Logo -->
+            <h1 class="text-6xl font-bold mb-4 elegant-gradient tracking-wider 
+                       animate-subtle-spin inline-block">
+                HARMONIQ
+            </h1>
+            
+            <!-- Sophisticated Tagline -->
+            <p class="text-2xl text-silk-600 mb-6 font-light italic tracking-wide 
+                      animate-floating">
+                 Harmoniq is an innovative event planning platform designed to turn chaos into harmony.
+            </p>
+            
+            <!-- Animated Service Highlights -->
+            <div class="grid grid-cols-2 gap-4 mb-8">
+                {% set services = [
+                    {icon: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z', title: 'Curated Experiences', color: 'text-silk-500'},
+                    {icon: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z', title: 'Timeless Precision', color: 'text-silk-600'},
+                    {icon: 'M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z', title: 'Magical Moments', color: 'text-silk-500'},
+                    {icon: 'M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z', title: 'Exclusive Design', color: 'text-silk-600' }
+                ] %}
+
+                {% for service in services %}
+                    <div class="flex flex-col items-center group transition-all duration-500 
+                                hover:scale-110 hover:rotate-6 
+                                transform hover:shadow-lg hover:bg-silk-50/20 
+                                rounded-xl p-2">
+                        <svg class="w-10 h-10 {{ service.color }} mb-2 
+                                    group-hover:animate-subtle-spin" 
+                             fill="none" stroke="currentColor" viewBox="0 0 24 24" 
+                             xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" 
+                                  stroke-width="1.5" d="{{ service.icon }}"></path>
+                        </svg>
+                        <h3 class="text-base font-semibold text-silk-700">
+                            {{ service.title }}
+                        </h3>
+                    </div>
+                {% endfor %}
+            </div>
+            
+            <!-- Animated Action Buttons -->
+            <div class="space-y-4">
+                <a href="{{ path('app_login') }}" class="block w-full group">
+                    <div class="bg-silk-500 text-white font-bold py-3 rounded-full 
+                                hover:bg-silk-600 transition-all duration-500 
+                                transform hover:scale-105 hover:translate-y-[-5px]
+                                shadow-md hover:shadow-xl
+                                text-sm uppercase tracking-wider">
+                        Login
+                    </div>
+                </a>
+                
+                <p class="text-sm text-silk-400 italic tracking-wide animate-floating">
+                     you are not a part of our community  🥺   join us then  🤓
+                </p>
+                
+                <a href="{{ path('app_signup') }}" class="block w-full group">
+                    <div class="border-2 border-silk-400 text-silk-600 font-bold py-3 rounded-full 
+                                hover:bg-silk-400 hover:text-white 
+                                transition-all duration-500
+                                transform hover:scale-105 hover:translate-y-[-5px]
+                                shadow-md hover:shadow-xl
+                                text-sm uppercase tracking-wider">
+                        sign up
+                    </div>
+                </a>
+
+                <!-- Admin Button -->
+                <a href="{{ path('admin_dashboard') }}" class="block w-full group">
+                    <div class="border-2 border-silk-600 text-silk-700 font-bold py-3 rounded-full 
+                                hover:bg-silk-600 hover:text-white 
+                                transition-all duration-500
+                                transform hover:scale-105 hover:translate-y-[-5px]
+                                shadow-md hover:shadow-xl
+                                text-sm uppercase tracking-wider">
+                        Admin Dashboard
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

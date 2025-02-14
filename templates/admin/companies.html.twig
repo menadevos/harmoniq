@@ -1,0 +1,84 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Companies Dashboard{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'silk': {
+                            50: '#F7F3F5',
+                            100: '#EDE0E8',
+                            200: '#DBC4D4',
+                            300: '#C9A4B9',
+                            400: '#B7849E',
+                            500: '#A56684',
+                            600: '#8C4F6B',
+                            700: '#733A52',
+                            800: '#5A2639',
+                            900: '#411320'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+{% endblock %}
+
+{% block body %}
+<div class="min-h-screen bg-silk-50 flex flex-col items-center py-20"> <!-- Increased vertical padding -->
+    <h1 class="text-5xl font-bold text-silk-800 mb-14">Companies Dashboard</h1> <!-- Increased font size and margin -->
+
+   
+
+    <div class="flex justify-center mb-14">
+        <ul class="flex space-x-10"> <!-- Increased space between category links -->
+            <li><a href="{{ path('admin_companies_by_category', { 'category': 'food' }) }}" class="text-2xl text-silk-800 hover:text-silk-500">Food</a></li>
+            <li><a href="{{ path('admin_companies_by_category', { 'category': 'decor' }) }}" class="text-2xl text-silk-800 hover:text-silk-500">Decor</a></li>
+            <li><a href="{{ path('admin_companies_by_category', { 'category': 'photography' }) }}" class="text-2xl text-silk-800 hover:text-silk-500">Photography</a></li>
+            <li><a href="{{ path('admin_companies_by_category', { 'category': 'venues' }) }}" class="text-2xl text-silk-800 hover:text-silk-500">Venues</a></li>
+            <li><a href="{{ path('admin_companies_by_category', { 'category': 'music' }) }}" class="text-2xl text-silk-800 hover:text-silk-500">Music</a></li>
+        </ul>
+    </div>
+
+    {% if companies is defined %}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-8 w-11/12"> <!-- Increased number of columns and gap -->
+            {% if companies is not empty %}
+                <h2 class="text-3xl font-bold mb-6 col-span-full text-silk-800">Companies in {{ category|capitalize }}</h2> <!-- Increased font size -->
+                {% for company in companies %}
+                    <div class="bg-silk-400 text-white p-10 rounded-2xl shadow-lg transform transition hover:scale-110"> <!-- Increased padding and hover scale -->
+                        <h3 class="text-2xl font-bold">{{ company.name }}</h3> <!-- Increased font size -->
+                        <p class="text-lg">{{ company.description }}</p> <!-- Increased font size -->
+                       
+                    </div>
+                {% endfor %}
+                 <a href="{{ path('admin_dashboard') }}" class="mt-4 inline-block text-black text-lg underline">← Back to Dashboard</a>
+            {% else %}
+            
+                <p class="col-span-full text-silk-800">No companies found in this category.</p>
+                <a href="{{ path('admin_dashboard') }}" class="col-span-full text-lg text-silk-800 hover:text-silk-500">← Back to Dashboard</a>
+            {% endif %}
+        </div>
+    {% else %}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-8 w-11/12"> <!-- Increased number of columns and gap -->
+            {% for category, companiesInCategory in companiesByCategory %}
+                <a href="{{ path('admin_companies_by_category', { 'category': category }) }}" class="bg-cover text-white p-10 rounded-2xl shadow-lg transform transition hover:scale-110"
+                   style="background-image: url('/images/{{ category }}.jpeg');">
+                    <div class="flex items-center space-x-6">
+                        <i class="fas fa-building text-5xl text-silk-800"></i> <!-- Increased icon size -->
+                        <div>
+                            <h2 class="text-4xl font-bold">{{ companiesInCategory|length }}</h2> <!-- Increased font size -->
+                            <p class="text-xl text-silk-800">{{ category|capitalize }} Companies</p> <!-- Increased font size -->
+                        </div>
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+        <a href="{{ path('admin_dashboard') }}" class="mt-10 text-lg text-silk-800 hover:text-silk-500">← Back to Dashboard</a>
+    {% endif %}
+</div>
+{% endblock %}
